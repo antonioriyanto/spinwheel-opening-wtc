@@ -1,0 +1,134 @@
+:root {
+  --wc-crimson-deep: #5a0709;
+  --wc-crimson-main: #9e1316;
+  --wc-brass-light: #f9e28c;
+  --wc-brass-main: #dfb136;
+  --wc-brass-dark: #8c620a;
+  --wc-ivory: #faf7f2;
+  --wc-ivory-border: #e4ddd3;
+  --wc-ink: #141210;
+  --wc-ink-muted: #524b44;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--wc-crimson-deep);
+  color: var(--wc-ivory);
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.font-display {
+  font-family: 'Archivo', sans-serif;
+}
+
+.font-mono-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard Accessibility: Explicit high-contrast focus ring */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2.5px solid #ffd700 !important;
+  outline-offset: 2px !important;
+}
+
+.ledger-card input:focus-visible,
+.ledger-card select:focus-visible,
+.ledger-card button:focus-visible {
+  outline: 2.5px solid #9e1316 !important;
+  outline-offset: 2px !important;
+}
+
+/* Crimson wave background artwork with blur effect */
+.bg-wave-artwork {
+  filter: blur(48px);
+  transform: scale(1.12);
+  opacity: 0.92;
+}
+
+/* Brushed Brass Primary CTA */
+.btn-brass-primary {
+  background: linear-gradient(180deg, #fae596 0%, #e4b842 45%, #b88412 100%);
+  color: #141210;
+  border: 1px solid #fff2bd;
+  box-shadow: 0 4px 0 #6e4c05, 0 8px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.btn-brass-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fff0b3 0%, #ecc352 45%, #c48f18 100%);
+}
+.btn-brass-primary:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #6e4c05, 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-brass-primary:disabled {
+  background: #423937;
+  color: #b5aba6;
+  border-color: #574c49;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Horological Watch Bezel Rim for Spinwheel */
+.wheel-chronograph-bezel {
+  background: conic-gradient(
+    from 45deg,
+    #8c620a,
+    #e5bc48,
+    #fbf0b9,
+    #d4a32c,
+    #785206,
+    #e5bc48,
+    #fbf0b9,
+    #8c620a
+  );
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), inset 0 0 8px rgba(70, 42, 0, 0.8);
+}
+
+/* Center Hub Crown Button */
+.wheel-crown-hub {
+  background: radial-gradient(circle at 35% 30%, #fffbe6 0%, #e5bc48 45%, #9c6d0c 100%);
+  border: 3px solid #fff5cc;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
+  transition: transform 0.12s ease;
+}
+.wheel-crown-hub:active:not(:disabled) {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+.wheel-crown-hub:disabled {
+  background: #332c2b;
+  border-color: #594e4c;
+  color: #9e948f;
+  cursor: not-allowed;
+}
+
+/* Warm Ivory Ledger Surface */
+.ledger-card {
+  background-color: var(--wc-ivory);
+  color: var(--wc-ink);
+  border: 1px solid var(--wc-ivory-border);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(20, 18, 16, 0.15);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(158, 19, 22, 0.45);
+  border-radius: 4px;
+}

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>watch club : Opening Sale Spinwheel</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Archivo (Display/Brand), Plus Jakarta Sans (UI), IBM Plex Mono (Horological Ledger/Numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,700;0,800;0,900;1,800;1,900&family=IBM+Plex+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body class="select-none">
+
+  <!-- Background Artwork -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#6b080a]" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0.00 0.00 1536.00 2048.00" preserveAspectRatio="xMidYMid slice" class="w-full h-full object-cover bg-wave-artwork">
+      <path fill="#ac1616" d="M 84.25 0.00 L 81.32 0.60 C 91.55 6.05 97.18 8.81 104.20 14.19 C 109.45 18.22 117.17 27.46 124.57 33.60 Q 124.82 33.80 139.77 45.63 Q 147.14 51.46 155.13 62.44 Q 164.61 75.46 173.65 87.96 C 183.41 101.48 190.00 112.48 196.16 125.92 C 205.93 147.29 209.74 172.53 207.55 195.44 Q 205.03 221.79 203.75 251.42 Q 203.26 263.00 201.97 271.25 C 199.22 288.88 197.51 299.75 197.70 314.94 C 197.95 335.81 198.12 353.54 201.82 372.16 Q 204.96 387.98 208.54 409.71 Q 210.51 421.66 212.89 428.94 Q 220.44 452.00 225.63 468.75 Q 228.21 477.09 230.07 481.86 Q 234.10 492.15 235.42 494.65 Q 252.03 526.18 272.30 566.70 Q 277.37 576.84 280.40 586.43 Q 291.50 621.54 299.89 653.92 Q 304.43 671.40 307.18 685.47 C 310.07 700.22 309.16 712.90 305.83 728.35 Q 304.09 736.39 301.93 747.74 C 298.59 765.31 291.70 781.09 282.68 798.57 Q 260.02 842.48 228.27 879.05 C 208.20 902.16 192.28 920.10 170.44 938.03 Q 161.63 945.26 145.53 956.10 Q 127.22 968.44 119.92 973.19 C 101.72 985.04 81.28 994.15 61.89 1004.96 Q 42.89 1015.54 39.47 1017.20 Q 19.80 1026.77 0.00 1036.13 L 0.00 0.00 L 84.25 0.00 Z" />
+      <path fill="#d32525" d="M 479.43 0.00 C 520.00 120.00 650.52 312.07 841.53 403.64 C 1036.63 376.16 1213.77 223.04 1291.53 0.00 L 1536.00 0.00 L 1536.00 1377.78 L 0.00 1377.78 L 0.00 1088.00 C 167.51 994.59 369.57 696.15 282.33 199.47 L 479.43 0.00 Z" />
+      <path fill="#fd5f62" d="M 746.71 888.21 C 830.87 981.88 819.92 1086.26 716.62 1254.75 C 576.12 1288.79 350.28 1235.06 318.49 1147.60 C 365.25 1058.56 485.53 933.00 746.71 888.21 Z" />
+      <path fill="#971212" d="M 1536.00 1627.12 L 1536.00 2048.00 L 0.00 2048.00 L 0.00 1422.29 C 390.07 1483.35 790.74 1672.13 1155.04 1487.31 C 1341.99 1464.12 1459.77 1561.63 1536.00 1627.12 Z" />
+    </svg>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50 w-full h-full hidden"></canvas>
+
+  <div class="relative z-10 min-h-screen w-full max-w-md mx-auto flex flex-col justify-between pb-24 border-x border-white/15 bg-black/15">
+
+    <!-- Top Operational Bar -->
+    <div class="flex items-center justify-between px-4 pt-3 pb-2 gap-2">
+      <div class="flex items-center gap-2">
+        <button
+          id="btnSoundToggle"
+          type="button"
+          onclick="toggleSound()"
+          aria-label="Aktifkan atau bisukan efek suara roda"
+          class="min-w-[44px] min-h-[44px] px-3 rounded-[10px] bg-black/45 hover:bg-black/65 border border-white/20 flex items-center justify-center text-[#f9e28c] transition"
+        >
+          <i id="iconSound" class="fa-solid fa-volume-high text-sm" aria-hidden="true"></i>
+        </button>
+
+        <button
+          id="syncBadge"
+          type="button"
+          onclick="handleSyncBadgeClick()"
+          aria-label="Status koneksi penyimpanan data, tekan untuk menyegarkan"
+          class="min-h-[44px] px-3.5 rounded-[10px] bg-black/45 hover:bg-black/65 border border-white/20 flex items-center gap-2 text-xs font-semibold text-white transition"
+        >
+          <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <span id="syncText">Penyimpanan Lokal</span>
+        </button>
+      </div>
+
+      <!-- Role Switcher Button (Staff / Admin) -->
+      <button
+        id="btnRoleAccess"
+        type="button"
+        onclick="handleRoleButtonClick()"
+        class="min-h-[44px] flex items-center gap-2.5 ledger-card hover:bg-white px-3.5 py-2 rounded-[10px] transition active:scale-95"
+      >
+        <div id="roleIconBox" class="w-7 h-7 rounded-[6px] bg-[#9e1316]/15 text-[#9e1316] flex items-center justify-center text-xs">
+          <i id="roleIcon" class="fa-solid fa-id-badge" aria-hidden="true"></i>
+        </div>
+        <div class="text-left leading-tight">
+          <div class="text-[10px] text-[#524b44] font-bold uppercase tracking-wider">Mode Akses</div>
+          <div id="roleLabel" class="text-xs font-extrabold text-[#141210]">Karyawan Toko</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Brand Header -->
+    <header class="text-center px-4 pt-1 pb-3">
+      <div class="flex items-center justify-center">
+        <span class="sr-only">watch club</span>
+        <svg
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 793.3 106.2"
+          class="h-7 sm:h-8 w-auto mx-auto"
+          aria-hidden="true"
+        >
+          <path
+            fill="#FFFFFF"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M100.3,44.8c0.6-1.5,1.2-3.3,1.9-5.3c0.7-2.1,1.1-3.8,1.4-5c0.3-1.5,0.5-2.6,0.5-3.4c0.1-0.8,0-1.8-0.1-2.9h16.3c-1.8,2.5-3.7,5.7-5.6,9.5c-1.5,3.1-2.9,6.1-4,9.1l-22.5,59.4H57.6l-0.5-59.4l-22.9,59.4h-31L2.5,47.8c0-5.9-0.2-10-0.6-12.2c-0.2-1.7-0.9-4.2-1.9-7.4h34.9c-0.5,1.4-0.9,2.5-1.2,3.3c-0.3,0.9-0.5,1.8-0.7,2.8c-0.3,1.6-0.5,3.4-0.5,5.3c0,0.2,0,1.7,0.1,4.4L33.3,78l19.2-49.8h34.1L87.1,78L100.3,44.8z M188.9,28.2h-54l-5.8,18.6c2.1-1.2,4-2.1,5.8-2.6c1.8-0.5,4-0.7,6.7-0.7h29.6c2,0,3.2,0.4,3.8,1.1c0.6,0.7,0.7,2,0.3,3.9c-0.4,1.8-1,3.1-1.8,3.9c-0.8,0.7-2.2,1.1-4.2,1.1h-27c-6.5,0-11.4,1.9-14.7,5.7c-3,3.4-5.3,9.4-7,17.9l-1.1,5.5c-1.6,8.4-1.5,14.4,0.2,18.1c1.8,3.7,5.9,5.5,12.3,5.5h21.1c4.1,0,7.1-0.6,8.9-1.7c1.8-1.1,3.5-3.4,5.1-7l-0.2,8.7h29.6c-0.7-1.7-1-3.7-1.1-5.8c0-2.1,0.3-5.1,1-8.8l6.6-34.1c2.1-10.7,2-18.3-0.2-22.7C200.6,30.4,196,28.2,188.9,28.2 M158,68.8h13.2l-2.1,11.1c-1,5-1.9,8.1-2.8,9.3c-0.9,1.2-2.8,1.8-5.6,1.8h-7c-2.3,0-3.9-0.4-4.6-1.3c-0.8-0.9-0.9-2.6-0.4-5.3l1.7-8.9c0.5-2.8,1.3-4.6,2.3-5.4C153.8,69.2,155.6,68.8,158,68.8 M233.4,12.4l29.9-1.1l-3.3,17h23.6l-2.9,15.3h-23.6l-7.9,41.1c-0.5,2.6-0.5,4.3,0,5.1c0.5,0.8,2.1,1.2,4.6,1.2h10.5c2.5,0,4.7-0.3,6.5-0.9c1.8-0.6,3.4-1.3,4.7-2l-5.4,18.3h-37.2c-5.4,0-9.2-1.6-11.4-4.8c-2.8-3.9-3.3-10.5-1.5-19.5l7.4-38.4h-12.7l2.9-15.3h12.7L233.4,12.4z M311,83l6.1-31.5c1-5.3,3.8-7.9,8.3-7.9h17c7,0,11.4,1.4,13.1,4.1l1.1-19.4h-46.1c-6.5,0-11.7,2.3-15.7,6.8c-3.6,4.1-6.1,9.8-7.5,17.3l-5.7,29.7c-1.5,7.6-1.1,13.6,1,17.8c2.1,4.2,6.4,6.4,13,6.4h45.9l5.8-19c-2.3,1.2-4.5,2.2-6.6,2.8c-2.1,0.6-5.4,0.9-9.7,0.9h-14.5C311.7,90.9,309.9,88.3,311,83 M400.3,0l-6.9,35.8c2.1-2.8,3.4-4.5,4-5.2c1.4-1.6,3-2.4,4.8-2.4h23.1c6.8,0,11.3,2.5,13.5,7.4c2.3,4.9,2.5,11.9,0.8,21l-6.1,31.7c-0.9,4.9-1.4,8.7-1.3,11.4c0.1,1.5,0.4,3.6,1.1,6.5h-36.2c2-3.2,3.4-6,4.3-8.5c0.9-2.5,1.7-5.6,2.4-9.4l7.4-38.4c0.4-2.3,0.4-4-0.1-5c-0.5-1-1.7-1.5-3.6-1.5h-10.8c-1.8,0-3.2,0.5-4.1,1.4c-0.9,0.9-1.6,2.6-2,5.1l-7.4,38.4c-0.9,4.9-1.4,8.7-1.3,11.4c0.1,1.5,0.4,3.6,1.1,6.5H347c2-3.2,3.4-6,4.3-8.5c0.9-2.5,1.7-5.6,2.4-9.4l13.6-70.5c0.9-4.9,1.4-8.7,1.3-11.4c-0.1-1.5-0.4-3.6-1.1-6.5H400.3z M520.3,83c-1,5.3,0.7,7.9,5.3,7.9H540c4.4,0,7.6-0.3,9.7-0.9c2.1-0.6,4.3-1.5,6.6-2.8l-5.8,19h-45.9c-6.5,0-10.9-2.1-13-6.4c-2.1-4.2-2.4-10.2-1-17.8l5.7-29.7c1.4-7.5,4-13.3,7.5-17.3c4-4.5,9.2-6.8,15.7-6.8h46.1l-1.1,19.4c-1.7-2.7-6.1-4.1-13.1-4.1h-17c-4.5,0-7.3,2.6-8.3,7.9L520.3,83z M578.4,17.9l-13.6,70.5c-0.7,3.8-1.5,6.9-2.4,9.4c-0.9,2.5-2.3,5.3-4.3,8.5h36.2c-0.7-2.8-1-5-1.1-6.5c-0.1-2.7,0.3-6.5,1.3-11.4l17-88.3h-32.9c0.7,2.8,1.1,5,1.1,6.5C579.8,9.2,579.4,13,578.4,17.9 M659.6,106.2l0.6-8.1c-1.5,2.6-2.8,4.4-3.9,5.5c-1.7,1.7-3.5,2.6-5.5,2.6h-24c-6.8,0-11.3-2.5-13.5-7.4c-2.2-4.9-2.4-11.9-0.7-21l6.1-31.7c0.9-4.9,1.4-8.7,1.3-11.4c-0.1-1.5-0.4-3.6-1.1-6.5h32.9l-10.8,56.3c-0.5,2.5-0.5,4.2,0.1,5.1c0.5,0.9,1.7,1.4,3.5,1.4h10.8c1.9,0,3.3-0.5,4.2-1.4c0.9-0.9,1.6-2.6,2-5.1l7.4-38.4c0.9-4.9,1.4-8.7,1.3-11.4c-0.1-1.5-0.4-3.6-1.1-6.5H702l-11.6,60.1c-0.9,4.9-1.4,8.7-1.3,11.4c0.1,1.5,0.4,3.6,1.1,6.5H659.6z M700.1,106.2h29.6l3.5-8.3c0.6,3.2,1.2,5.4,1.8,6.5c0.7,1.2,1.8,1.8,3.3,1.8h25c6.5,0,11.7-2.3,15.7-6.8c3.6-4.1,6.1-9.8,7.5-17.3l5.7-29.7c1.5-7.6,1.2-13.5-0.8-17.5c-2.2-4.4-6.6-6.6-13.1-6.6h-23.2c-2.5,0-4.5,0.9-6.2,2.6c-0.9,1-2,2.6-3.2,5L752.7,0h-32.2c0.5,2,0.8,4,0.8,6s-0.4,4.9-1.1,8.6l-14.8,77.1c-0.7,3.7-1.5,6.6-2.4,8.8C702.2,102.6,701.2,104.5,700.1,106.2 M736.3,85l6.9-35.6c0.8-3.9,2.5-5.9,5.3-5.9h11.8c2.7,0,3.7,2,3,5.9L756.4,85c-0.8,3.9-2.5,5.9-5.2,5.9h-11.8C736.6,90.9,735.6,89,736.3,85"
+          />
+        </svg>
+      </div>
+
+      <!-- Angled Poster Banner Ribbons -->
+      <div class="mt-2 inline-flex flex-col items-center">
+        <div class="bg-[#faf7f2] px-4 py-0.5 transform -rotate-1 border border-[#e4ddd3]">
+          <span class="font-display font-black text-[#9e1316] text-base sm:text-lg tracking-wider">
+            OPENING SALE UP TO 30%
+          </span>
+        </div>
+        <div class="bg-[#f9e28c] px-3 py-0.5 transform rotate-1 -mt-0.5 border border-[#8c620a]/40">
+          <span class="font-display font-extrabold text-[#141210] text-xs tracking-wider">
+            PROGRAM HADIAH LANGSUNG
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Error Banner -->
+    <div id="globalErrorBanner" role="alert" class="hidden mx-4 mb-3 p-3 rounded-[10px] bg-[#3b0709] border border-[#f9e28c] text-[#faf7f2] text-xs items-center justify-between gap-3">
+      <div class="flex items-start gap-2.5">
+        <i class="fa-solid fa-triangle-exclamation text-[#f9e28c] mt-0.5" aria-hidden="true"></i>
+        <div>
+          <div class="font-bold">Gagal Terhubung ke Google Sheets</div>
+          <p id="globalErrorText" class="text-[11px] text-[#faf7f2]/85 mt-0.5">Data tetap tersimpan aman di perangkat ini. Periksa koneksi atau URL Apps Script.</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onclick="syncFromGoogleSheets(true)"
+        class="min-h-[44px] px-3 rounded-[8px] bg-[#f9e28c] text-[#141210] font-bold text-xs shrink-0"
+      >
+        Coba Lagi
+      </button>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 px-4 flex flex-col justify-between">
+
+      <!-- ==================== VIEW 1: RODA HADIAH (SPIN WHEEL) ==================== -->
+      <section id="viewSpinWheel" aria-label="Halaman Putar Roda Hadiah" class="flex flex-col items-center justify-between space-y-3.5">
+
+        <!-- Customer Registration Ledger Card -->
+        <div class="w-full ledger-card rounded-[14px] p-3.5">
+          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-[#e4ddd3]">
+            <div>
+              <h2 class="text-xs sm:text-sm font-extrabold text-[#141210]">
+                Registrasi Pelanggan Toko
+              </h2>
+              <p class="text-[11px] text-[#524b44] font-medium">
+                Khusus transaksi yang memenuhi syarat nominal belanja
+              </p>
+            </div>
+            <span id="customerLockBadge" class="hidden text-[11px] font-bold bg-emerald-800 text-white px-2.5 py-1 rounded-[6px]">
+              Siap Diputar
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label for="inputNama" class="block text-xs font-bold text-[#141210] mb-1">
+                Nama Pelanggan
+              </label>
+              <input
+                id="inputNama"
+                type="text"
+                placeholder="Misal: Budi Santoso"
+                autocomplete="off"
+                oninput="handleCustomerInputChange()"
+                class="w-full min-h-[44px] px-3 py-2 text-sm font-semibold text-[#141210] bg-white border border-[#c7bdb0] rounded-[8px] placeholder:text-[#787067] transition"
+              />
+            </div>
+            <div>
+              <label for="inputWa" class="block text-xs font-bold text-[#141210] mb-1">
+                Nomor WhatsApp
+              </label>
+              <input
+                id="inputWa"
+                type="tel"
+                inputmode="numeric"
+                placeholder="081234567890"
+                autocomplete="off"
+                oninput="handleCustomerInputChange()"
+                class="w-full min-h-[44px] px-3 py-2 text-sm font-mono-num font-semibold text-[#141210] bg-white border border-[#c7bdb0] rounded-[8px] placeholder:text-[#787067] transition"
+              />
+            </div>
+          </div>
+
+          <!-- Validation Status Bar -->
+          <div id="inputHelperText" role="status" class="mt-2.5 text-xs text-[#524b44] bg-[#f0ebe1] border border-[#dcd3c6] rounded-[8px] px-3 py-2 flex items-center gap-2">
+            <i class="fa-solid fa-lock text-[#9e1316]" aria-hidden="true"></i>
+            <span>Lengkapi nama dan nomor WhatsApp pelanggan untuk membuka kunci roda hadiah.</span>
+          </div>
+        </div>
+
+        <!-- SPINWHEEL INTERACTIVE STAGE -->
+        <div class="relative flex items-center justify-center my-1">
+          <!-- Top Pointer Needle -->
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30" aria-hidden="true">
+            <svg width="36" height="40" viewBox="0 0 38 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 40L3 8C1.5 5 3.7 1.5 7 1.5H31C34.3 1.5 36.5 5 35 8L19 40Z" fill="#9E1316" stroke="#FAF7F2" stroke-width="2.5"/>
+              <circle cx="19" cy="11" r="4" fill="#F9E28C"/>
+            </svg>
+          </div>
+
+          <!-- Outer Chronograph Brass Bezel -->
+          <div class="wheel-chronograph-bezel relative p-3.5 sm:p-4 rounded-full flex items-center justify-center">
+            <!-- Bezel Index Markers Container -->
+            <div id="wheelLedContainer" class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+
+            <!-- Wheel Canvas Container -->
+            <div class="relative w-[274px] h-[274px] sm:w-[304px] sm:h-[304px] rounded-full bg-[#141210] overflow-hidden border-2 border-[#141210]">
+              <canvas id="spinWheelCanvas" width="600" height="600" class="w-full h-full block"></canvas>
+            </div>
+
+            <!-- Center Horological Crown Hub Button -->
+            <button
+              id="btnCenterSpin"
+              type="button"
+              onclick="triggerSpinFlow()"
+              disabled
+              aria-label="Putar Roda Hadiah"
+              class="wheel-crown-hub absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-20 h-20 sm:w-22 sm:h-22 rounded-full flex flex-col items-center justify-center cursor-pointer"
+            >
+              <span class="font-display font-black text-xs sm:text-sm tracking-wider text-[#141210]">
+                PUTAR
+              </span>
+              <span id="centerHubSubtext" class="text-[10px] font-bold text-[#141210]/80 mt-0.5">
+                Terkunci
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="w-full pt-1 text-center">
+          <button
+            id="btnBottomSpin"
+            type="button"
+            onclick="triggerSpinFlow()"
+            disabled
+            class="btn-brass-primary w-full min-h-[48px] py-3 px-5 rounded-[10px] font-display font-black text-sm sm:text-base tracking-wide flex items-center justify-center gap-2.5"
+          >
+            <i id="bottomSpinIcon" class="fa-solid fa-lock text-sm" aria-hidden="true"></i>
+            <span id="bottomSpinText">Isi Data Pelanggan Dahulu</span>
+          </button>
+          <p class="text-xs text-[#faf7f2]/90 font-medium mt-2">
+            Tersedia <span id="activePrizeCountText" class="font-mono-num font-bold underline">0</span> kategori hadiah (<span id="activeTotalUnitsText" class="font-mono-num font-bold">0</span> unit)
+          </p>
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 2: STOK & RIWAYAT (STAFF READ-ONLY) ==================== -->
+      <section id="viewStaffHistory" aria-label="Stok Hadiah dan Riwayat Pelanggan" class="hidden flex-col space-y-3.5">
+        <div class="bg-black/45 border border-white/20 rounded-[14px] p-3.5 flex items-center justify-between gap-2">
+          <div>
+            <h2 class="text-xs sm:text-sm font-extrabold text-white">Laporan Stok & Riwayat Klaim</h2>
+            <p class="text-xs text-[#f9e28c]">Mode Karyawan Toko (Hanya Lihat)</p>
+          </div>
+          <button
+            type="button"
+            onclick="syncFromGoogleSheets(true)"
+            class="min-h-[44px] px-3.5 py-2 rounded-[10px] bg-white/15 hover:bg-white/25 text-white text-xs font-bold flex items-center gap-2 transition"
+          >
+            <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+            <span>Segarkan Data</span>
+          </button>
+        </div>
+
+        <div class="ledger-card rounded-[14px] p-3.5">
+          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-[#e4ddd3]">
+            <h3 class="text-xs sm:text-sm font-extrabold text-[#141210]">
+              Sisa Stok Hadiah Toko
+            </h3>
+            <span id="staffTotalStockBadge" class="font-mono-num text-xs font-bold bg-[#9e1316] text-white px-2.5 py-1 rounded-[6px]">
+              Total: 0 Unit
+            </span>
+          </div>
+          <div id="staffStockGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
+
+        <div class="ledger-card rounded-[14px] p-3.5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-[#e4ddd3]">
+            <h3 class="text-xs sm:text-sm font-extrabold text-[#141210]">
+              Catatan Pelanggan yang Sudah Putar
+            </h3>
+            <span id="staffTotalCustomerBadge" class="font-mono-num text-xs font-bold text-[#524b44]">
+              0 Transaksi
+            </span>
+          </div>
+
+          <div class="relative mb-3">
+            <label for="staffSearchInput" class="sr-only">Cari nama pelanggan, nomor WA, atau hadiah</label>
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#524b44] text-xs" aria-hidden="true"></i>
+            <input
+              id="staffSearchInput"
+              type="search"
+              placeholder="Cari nama pelanggan, nomor WA, atau hadiah..."
+              oninput="renderStaffView()"
+              class="w-full min-h-[44px] pl-9 pr-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] text-xs sm:text-sm font-medium text-[#141210] placeholder:text-[#787067]"
+            />
+          </div>
+
+          <div id="staffHistoryList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 3: KELOLA TOKO (ADMIN CRUD + SHEETS) ==================== -->
+      <section id="viewAdminDashboard" aria-label="Panel Pengelolaan Admin" class="hidden flex-col space-y-3.5">
+        <div class="bg-[#141210] border border-[#dfb136]/50 text-[#faf7f2] rounded-[14px] p-3.5 flex items-center justify-between gap-2">
+          <div>
+            <div class="text-[10px] font-mono-num uppercase tracking-wider text-[#f9e28c]">Akses Pengelola Toko</div>
+            <h2 class="text-xs sm:text-sm font-extrabold text-white">Manajemen Stok, Pelanggan & Spreadsheet</h2>
+          </div>
+          <button
+            type="button"
+            onclick="logoutAdmin()"
+            class="min-h-[44px] px-3.5 py-2 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0"
+          >
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+            <span>Tutup Admin</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1.5 bg-black/45 p-1.5 rounded-[12px] border border-white/15" role="tablist">
+          <button
+            id="adminSubTabStock"
+            type="button"
+            role="tab"
+            onclick="switchAdminSubTab('stock')"
+            class="min-h-[44px] px-2 rounded-[8px] text-xs font-extrabold bg-[#faf7f2] text-[#9e1316] transition"
+          >
+            Stok Hadiah
+          </button>
+          <button
+            id="adminSubTabCustomer"
+            type="button"
+            role="tab"
+            onclick="switchAdminSubTab('customer')"
+            class="min-h-[44px] px-2 rounded-[8px] text-xs font-bold text-white/85 hover:text-white transition"
+          >
+            Data Pelanggan
+          </button>
+          <button
+            id="adminSubTabSheets"
+            type="button"
+            role="tab"
+            onclick="switchAdminSubTab('sheets')"
+            class="min-h-[44px] px-2 rounded-[8px] text-xs font-bold text-white/85 hover:text-white transition"
+          >
+            Google Sheets
+          </button>
+        </div>
+
+        <!-- ADMIN SUB-VIEW 1: STOK HADIAH CRUD -->
+        <div id="adminPanelStock" class="ledger-card rounded-[14px] p-3.5 space-y-3">
+          <div class="flex items-center justify-between gap-2 pb-2 border-b border-[#e4ddd3]">
+            <div>
+              <h3 class="text-xs sm:text-sm font-extrabold text-[#141210]">Daftar Stok Hadiah</h3>
+              <p class="text-[11px] text-[#524b44]">Peluang berhenti dihitung proporsional mengikuti jumlah stok aktif</p>
+            </div>
+            <button
+              type="button"
+              onclick="openPrizeModal()"
+              class="min-h-[44px] px-3.5 py-2 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0"
+            >
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              <span>Tambah Item</span>
+            </button>
+          </div>
+
+          <div id="adminStockList" class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- ADMIN SUB-VIEW 2: DATA PELANGGAN CRUD & CSV -->
+        <div id="adminPanelCustomer" class="hidden ledger-card rounded-[14px] p-3.5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#e4ddd3]">
+            <div>
+              <h3 class="text-xs sm:text-sm font-extrabold text-[#141210]">Catatan Transaksi Pelanggan</h3>
+              <p class="text-[11px] text-[#524b44]">Koreksi salah ketik, tambah manual, atau unduh laporan CSV</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                onclick="exportCustomerCSV()"
+                class="min-h-[44px] px-3 py-2 rounded-[10px] bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold flex items-center gap-1.5 transition"
+              >
+                <i class="fa-solid fa-file-export" aria-hidden="true"></i>
+                <span>Unduh CSV</span>
+              </button>
+              <button
+                type="button"
+                onclick="openCustomerModal()"
+                class="min-h-[44px] px-3 py-2 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white text-xs font-bold flex items-center gap-1.5 transition"
+              >
+                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                <span>Input Manual</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="relative">
+            <label for="adminCustomerSearch" class="sr-only">Cari transaksi pelanggan</label>
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#524b44] text-xs" aria-hidden="true"></i>
+            <input
+              id="adminCustomerSearch"
+              type="search"
+              placeholder="Cari nama pelanggan, nomor WA, atau hadiah..."
+              oninput="renderAdminCustomerList()"
+              class="w-full min-h-[44px] pl-9 pr-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] text-xs sm:text-sm font-medium text-[#141210]"
+            />
+          </div>
+
+          <div id="adminCustomerList" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- ADMIN SUB-VIEW 3: GOOGLE SHEETS SETUP & APPS SCRIPT -->
+        <div id="adminPanelSheets" class="hidden ledger-card rounded-[14px] p-3.5 space-y-3 text-xs">
+          <div class="bg-[#f0ebe1] border border-[#dcd3c6] rounded-[10px] p-3 text-[#141210]">
+            <div class="font-extrabold text-xs mb-1">
+              Sinkronisasi Dua Arah Google Sheets
+            </div>
+            <p class="text-[11px] text-[#524b44] leading-relaxed">
+              Tempelkan URL Web App Google Apps Script (`.../exec`) agar setiap putaran roda, perubahan stok, dan catatan pelanggan tersimpan langsung ke Google Sheets toko.
+            </p>
+          </div>
+
+          <div>
+            <label for="inputGasUrl" class="block text-xs font-bold text-[#141210] mb-1">
+              URL Web App Google Apps Script
+            </label>
+            <input
+              id="inputGasUrl"
+              type="url"
+              placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+              class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] text-xs font-mono-num text-[#141210]"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button
+              type="button"
+              onclick="saveGasUrlAndSync()"
+              class="min-h-[44px] py-2.5 px-3 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+            >
+              <i class="fa-solid fa-link" aria-hidden="true"></i>
+              <span>Simpan & Sinkronkan</span>
+            </button>
+            <button
+              type="button"
+              onclick="pushInitialDataToSheets()"
+              class="min-h-[44px] py-2.5 px-3 rounded-[10px] bg-[#141210] hover:bg-neutral-800 text-[#f9e28c] font-bold text-xs flex items-center justify-center gap-2 transition"
+            >
+              <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+              <span>Kirim Stok Awal ke Sheet</span>
+            </button>
+          </div>
+
+          <div class="pt-2 border-t border-[#e4ddd3] flex items-center justify-between gap-2">
+            <div class="text-xs font-semibold text-[#524b44]">
+              PIN Akses Admin: <span id="currentPinDisplay" class="font-mono-num font-bold text-[#141210]">1234</span>
+            </div>
+            <button
+              type="button"
+              onclick="openChangePinModal()"
+              class="min-h-[44px] px-3 rounded-[8px] bg-[#f0ebe1] hover:bg-[#e4ddd3] text-xs font-bold text-[#9e1316] transition"
+            >
+              Ubah PIN Admin
+            </button>
+          </div>
+
+          <div class="pt-2 border-t border-[#e4ddd3] space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <label for="gasCodeTextarea" class="font-extrabold text-[#141210] text-xs">
+                Kode Google Apps Script (`Code.gs`)
+              </label>
+              <button
+                type="button"
+                onclick="copyAppsScriptCode()"
+                class="min-h-[44px] px-3 py-1.5 rounded-[8px] bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold flex items-center gap-1.5 transition"
+              >
+                <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                <span>Salin Kode</span>
+              </button>
+            </div>
+            <ol class="list-decimal list-inside text-[11px] text-[#524b44] space-y-1 bg-white p-3 rounded-[8px] border border-[#dcd3c6]">
+              <li>Buka Google Sheets baru di Google Drive toko, lalu klik menu <strong>Ekstensi &gt; Apps Script</strong>.</li>
+              <li>Ganti seluruh isi file dengan kode di bawah ini dan tekan <strong>Simpan</strong>.</li>
+              <li>Pilih <strong>Terapkan (Deploy) &gt; Deployment baru &gt; Aplikasi Web</strong>.</li>
+              <li>Atur akses ke <strong>Siapa saja (Anyone)</strong>, terapkan, lalu tempelkan URL Web App ke kolom di atas.</li>
+            </ol>
+            <textarea
+              id="gasCodeTextarea"
+              readonly
+              rows="6"
+              class="w-full p-2.5 bg-[#141210] text-[#f9e28c] font-mono-num text-[11px] rounded-[8px] border border-[#524b44]"
+            ></textarea>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav aria-label="Navigasi Utama" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-30 bg-[#faf7f2] border-t-2 border-[#dcd3c6] grid grid-cols-2 shadow-lg">
+      <button
+        id="navTabSpin"
+        type="button"
+        onclick="switchMainTab('spin')"
+        class="min-h-[60px] py-2 px-3 flex flex-col items-center justify-center bg-[#faf7f2] text-[#9e1316] border-t-4 border-[#9e1316] transition"
+      >
+        <span class="font-display font-black text-xs sm:text-sm">Roda Hadiah</span>
+        <span class="text-[11px] text-[#524b44] font-semibold">Input &amp; Putar Spin</span>
+      </button>
+
+      <button
+        id="navTabSecondary"
+        type="button"
+        onclick="switchMainTab('secondary')"
+        class="min-h-[60px] py-2 px-3 flex flex-col items-center justify-center bg-[#ece6dc] text-[#524b44] border-t-4 border-transparent hover:bg-[#faf7f2] transition"
+      >
+        <span id="navSecondaryTitle" class="font-display font-black text-xs sm:text-sm">Stok &amp; Riwayat</span>
+        <span id="navSecondarySub" class="text-[11px] text-[#524b44] font-semibold">Catatan Hanya-Lihat</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- ==================== MODALS & DIALOGS ==================== -->
+
+  <!-- 1. PRIZE WINNER POP-UP MODAL -->
+  <div id="modalWinner" role="dialog" aria-modal="true" aria-labelledby="winnerModalHeading" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-sm bg-[#7a0c0e] border-2 border-[#f9e28c] rounded-[14px] p-5 text-center shadow-2xl relative overflow-hidden">
+      <div id="winnerModalHeading" class="text-xs font-mono-num font-bold uppercase tracking-wider text-[#f9e28c] mb-1">
+        Bukti Klaim Hadiah Langsung
+      </div>
+      <h3 id="winnerCustomerName" class="font-display font-black text-xl text-white truncate">Nama Pelanggan</h3>
+      <p id="winnerCustomerWa" class="font-mono-num text-xs text-white/90 font-semibold mb-3">08123456789</p>
+
+      <div class="ledger-card rounded-[12px] p-4 my-2 flex flex-col items-center">
+        <div id="winnerPrizeIconBox" class="w-16 h-16 rounded-[10px] bg-[#9e1316]/10 border border-[#9e1316]/25 flex items-center justify-center mb-2"></div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#9e1316]">Hadiah yang Didapatkan:</span>
+        <div id="winnerPrizeName" class="font-display font-black text-2xl text-[#141210] mt-1">TUMBLER GARMIN</div>
+      </div>
+
+      <p class="text-xs text-white/90 mt-3 mb-4 leading-relaxed">
+        Silakan serahkan fisik hadiah kepada pelanggan, lalu tekan tombol di bawah untuk mencatat transaksi dan memotong stok.
+      </p>
+
+      <button
+        id="btnConfirmWinner"
+        type="button"
+        onclick="confirmPrizeAndRecord()"
+        class="btn-brass-primary w-full min-h-[48px] py-3 px-4 rounded-[10px] font-display font-black text-sm sm:text-base flex items-center justify-center gap-2"
+      >
+        <i class="fa-solid fa-check" aria-hidden="true"></i>
+        <span>Serahkan Hadiah &amp; Catat Transaksi</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. DUPLICATE WHATSAPP NUMBER WARNING MODAL -->
+  <div id="modalDuplicateWa" role="dialog" aria-modal="true" aria-labelledby="dupModalHeading" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-sm ledger-card rounded-[14px] p-5 shadow-2xl border-2 border-[#dfb136]">
+      <div class="w-12 h-12 rounded-[10px] bg-amber-100 text-amber-900 flex items-center justify-center text-xl mx-auto mb-3">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+      </div>
+      <h3 id="dupModalHeading" class="text-base font-extrabold text-center text-[#141210]">Nomor WhatsApp Sudah Tercatat</h3>
+      <p id="duplicateWaMessage" class="text-xs text-[#524b44] text-center mt-2 leading-relaxed"></p>
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button
+          type="button"
+          onclick="closeDuplicateWaModal(false)"
+          class="min-h-[44px] py-2.5 px-4 rounded-[10px] bg-[#e4ddd3] hover:bg-[#d5ccc0] text-[#141210] font-bold text-xs transition"
+        >
+          Batalkan
+        </button>
+        <button
+          type="button"
+          onclick="closeDuplicateWaModal(true)"
+          class="min-h-[44px] py-2.5 px-4 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-bold text-xs transition"
+        >
+          Izinkan Putar Lagi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ADMIN PIN LOGIN MODAL -->
+  <div id="modalAdminLogin" role="dialog" aria-modal="true" aria-labelledby="loginModalHeading" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-xs ledger-card rounded-[14px] p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-2">
+        <h3 id="loginModalHeading" class="text-sm font-extrabold text-[#141210] flex items-center gap-2">
+          <i class="fa-solid fa-key text-[#9e1316]" aria-hidden="true"></i>
+          <span>Verifikasi PIN Admin</span>
+        </h3>
+        <button
+          type="button"
+          onclick="closeAdminLoginModal()"
+          aria-label="Tutup dialog login admin"
+          class="min-w-[44px] min-h-[44px] -mr-2 rounded-[8px] text-[#524b44] hover:text-[#141210] flex items-center justify-center"
+        >
+          <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p class="text-xs text-[#524b44] mb-3 leading-relaxed">
+        Masukkan PIN pengelola toko untuk mengatur stok hadiah dan data pelanggan. (PIN bawaan: <strong class="font-mono-num text-[#141210]">1234</strong>)
+      </p>
+      <label for="inputAdminPin" class="sr-only">PIN Admin</label>
+      <input
+        id="inputAdminPin"
+        type="password"
+        inputmode="numeric"
+        placeholder="••••"
+        onkeydown="if(event.key==='Enter') verifyAdminPin()"
+        class="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-[#c7bdb0] rounded-[8px] text-center font-mono-num text-lg font-bold tracking-widest text-[#141210]"
+      />
+      <div id="adminPinError" role="alert" class="hidden text-xs text-[#9e1316] font-bold text-center mt-2">
+        PIN yang dimasukkan tidak sesuai.
+      </div>
+      <button
+        type="button"
+        onclick="verifyAdminPin()"
+        class="w-full min-h-[44px] mt-4 py-2.5 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-extrabold text-xs transition"
+      >
+        Buka Panel Admin
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. ADMIN ADD / EDIT PRIZE MODAL -->
+  <div id="modalPrizeCrud" role="dialog" aria-modal="true" aria-labelledby="modalPrizeTitle" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-sm ledger-card rounded-[14px] p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="modalPrizeTitle" class="text-sm font-extrabold text-[#141210]">Tambah Item Hadiah</h3>
+        <button
+          type="button"
+          onclick="closePrizeModal()"
+          aria-label="Tutup formulir hadiah"
+          class="min-w-[44px] min-h-[44px] -mr-2 rounded-[8px] text-[#524b44] hover:text-[#141210] flex items-center justify-center"
+        >
+          <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="prizeFormId" />
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label for="prizeFormName" class="block font-bold text-[#141210] mb-1">Nama Hadiah</label>
+          <input id="prizeFormName" type="text" placeholder="Misal: Tumbler Garmin" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-semibold text-[#141210]" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label for="prizeFormStock" class="block font-bold text-[#141210] mb-1">Jumlah Stok (Unit)</label>
+            <input id="prizeFormStock" type="number" min="0" placeholder="10" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-mono-num font-semibold text-[#141210]" />
+          </div>
+          <div>
+            <label for="prizeFormColor" class="block font-bold text-[#141210] mb-1">Warna Sektor Roda</label>
+            <select id="prizeFormColor" class="w-full min-h-[44px] px-2.5 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-semibold text-[#141210]">
+              <option value="#9E1316">Merah Watch Club</option>
+              <option value="#E4B842">Emas Horologi</option>
+              <option value="#141210">Hitam Obsidian</option>
+              <option value="#FAF7F2">Gading Terang</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="prizeFormIconType" class="block font-bold text-[#141210] mb-1">Kategori Visual Hadiah</label>
+          <select id="prizeFormIconType" class="w-full min-h-[44px] px-2.5 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-semibold text-[#141210]">
+            <option value="tumbler">Tumbler Minum (Garmin / Reebok)</option>
+            <option value="keychain">Gantungan Kunci Watch Club</option>
+            <option value="pouch">Pouch Serut Watch Club</option>
+            <option value="cloth">Kain Lap Microfiber Jam Tangan</option>
+            <option value="pen">Pulpen Eksklusif</option>
+            <option value="watch">Jam Tangan</option>
+            <option value="umbrella">Payung Lipat</option>
+            <option value="gift">Kotak Hadiah Umum</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="prizeFormImageUrl" class="block font-bold text-[#141210] mb-1">Tautan Foto Produk (Opsional)</label>
+          <input id="prizeFormImageUrl" type="url" placeholder="Biarkan kosong untuk memakai ikon vektor" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] text-xs text-[#141210]" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button type="button" onclick="closePrizeModal()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#e4ddd3] hover:bg-[#d5ccc0] text-[#141210] font-bold text-xs">Batalkan</button>
+        <button type="button" onclick="savePrizeForm()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-bold text-xs">Simpan Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ADMIN ADD / EDIT CUSTOMER MODAL -->
+  <div id="modalCustomerCrud" role="dialog" aria-modal="true" aria-labelledby="modalCustomerTitle" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-sm ledger-card rounded-[14px] p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="modalCustomerTitle" class="text-sm font-extrabold text-[#141210]">Ubah Data Pelanggan</h3>
+        <button
+          type="button"
+          onclick="closeCustomerModal()"
+          aria-label="Tutup formulir pelanggan"
+          class="min-w-[44px] min-h-[44px] -mr-2 rounded-[8px] text-[#524b44] hover:text-[#141210] flex items-center justify-center"
+        >
+          <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="custFormId" />
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label for="custFormName" class="block font-bold text-[#141210] mb-1">Nama Pelanggan</label>
+          <input id="custFormName" type="text" placeholder="Nama lengkap pelanggan" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-semibold text-[#141210]" />
+        </div>
+        <div>
+          <label for="custFormWa" class="block font-bold text-[#141210] mb-1">Nomor WhatsApp</label>
+          <input id="custFormWa" type="tel" inputmode="numeric" placeholder="08123456789" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-mono-num font-semibold text-[#141210]" />
+        </div>
+        <div>
+          <label for="custFormPrize" class="block font-bold text-[#141210] mb-1">Hadiah yang Diterima</label>
+          <select id="custFormPrize" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] font-semibold text-[#141210]"></select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button type="button" onclick="closeCustomerModal()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#e4ddd3] hover:bg-[#d5ccc0] text-[#141210] font-bold text-xs">Batalkan</button>
+        <button type="button" onclick="saveCustomerForm()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-bold text-xs">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ADMIN DELETE CUSTOMER CONFIRMATION MODAL -->
+  <div id="modalDeleteCustomer" role="dialog" aria-modal="true" aria-labelledby="delCustHeading" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-sm ledger-card rounded-[14px] p-5 shadow-2xl">
+      <div class="w-11 h-11 rounded-[10px] bg-[#9e1316]/15 text-[#9e1316] flex items-center justify-center text-lg mx-auto mb-2.5">
+        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+      </div>
+      <h3 id="delCustHeading" class="text-sm font-extrabold text-center text-[#141210]">Hapus Catatan Transaksi?</h3>
+      <p id="deleteCustomerText" class="text-xs text-[#524b44] text-center mt-1.5 leading-relaxed"></p>
+
+      <label class="mt-3.5 min-h-[44px] flex items-center gap-2.5 bg-white border border-[#c7bdb0] p-3 rounded-[8px] cursor-pointer">
+        <input id="chkRestoreStock" type="checkbox" checked class="w-5 h-5 accent-[#9e1316] rounded shrink-0" />
+        <span class="text-xs font-semibold text-[#141210]">Kembalikan <strong>+1 unit stok</strong> hadiah ke daftar stok toko</span>
+      </label>
+
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button type="button" onclick="closeDeleteCustomerModal()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#e4ddd3] hover:bg-[#d5ccc0] text-[#141210] font-bold text-xs">Batalkan</button>
+        <button type="button" onclick="confirmDeleteCustomer()" class="min-h-[44px] py-2.5 rounded-[10px] bg-[#9e1316] hover:bg-[#7d0e10] text-white font-bold text-xs">Ya, Hapus Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. GENERIC CONFIRM / CHANGE PIN MODAL -->
+  <div id="modalGenericConfirm" role="dialog" aria-modal="true" aria-labelledby="genericConfirmTitle" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-xs ledger-card rounded-[14px] p-5 shadow-2xl text-center">
+      <h3 id="genericConfirmTitle" class="text-sm font-extrabold text-[#141210]">Konfirmasi Tindakan</h3>
+      <p id="genericConfirmMessage" class="text-xs text-[#524b44] mt-1.5 leading-relaxed"></p>
+      <div id="genericInputContainer" class="hidden mt-3">
+        <label for="genericConfirmInput" class="sr-only">Input nilai konfirmasi</label>
+        <input id="genericConfirmInput" type="text" class="w-full min-h-[44px] px-3 py-2 bg-white border border-[#c7bdb0] rounded-[8px] text-center font-mono-num font-bold text-sm text-[#141210]" />
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button type="button" onclick="closeGenericConfirm()" class="min-h-[44px] py-2 rounded-[10px] bg-[#e4ddd3] text-[#141210] font-bold text-xs">Batalkan</button>
+        <button id="btnGenericConfirmOk" type="button" class="min-h-[44px] py-2 rounded-[10px] bg-[#9e1316] text-white font-bold text-xs">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" aria-live="polite" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center space-y-2 w-full max-w-xs px-4"></div>
+
+  <!-- Entry Point Modul JavaScript -->
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
