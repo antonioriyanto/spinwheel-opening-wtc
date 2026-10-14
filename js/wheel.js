@@ -112,12 +112,14 @@ export function drawSpinWheel() {
 
     const labelText = String(prize.nama_hadiah || "").trim();
     const maxRadialWidth = 170;
-    let fontSize = 30;
-    ctx.font = `800 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+    let fontSize = 28; // Disesuaikan sedikit agar emoji & teks pas
+    
+    // Tambahkan fallback font emoji agar tampil berwarna di canvas
+    ctx.font = `800 ${fontSize}px 'Plus Jakarta Sans', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif`;
 
-    while (ctx.measureText(labelText).width > maxRadialWidth && fontSize > 15) {
+    while (ctx.measureText(labelText).width > maxRadialWidth && fontSize > 14) {
       fontSize -= 1;
-      ctx.font = `800 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.font = `800 ${fontSize}px 'Plus Jakarta Sans', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif`;
     }
 
     ctx.fillStyle = textColor;

@@ -16,14 +16,14 @@ export const appState = {
   duplicateWaConfirmed: false,
   deleteTargetCustomerId: null,
 
-  prizes: [
-    { id_hadiah: "GIFT-01", nama_hadiah: "Tumbler Reebok", stok: 3, warna_sektor: "#9E1316", icon_type: "tumbler", url_gambar: "" },
-    { id_hadiah: "GIFT-02", nama_hadiah: "Gantungan Kunci", stok: 30, warna_sektor: "#E4B842", icon_type: "keychain", url_gambar: "" },
-    { id_hadiah: "GIFT-03", nama_hadiah: "Pouch Serut", stok: 20, warna_sektor: "#141210", icon_type: "pouch", url_gambar: "" },
-    { id_hadiah: "GIFT-04", nama_hadiah: "Lap Jam Tangan", stok: 30, warna_sektor: "#9E1316", icon_type: "cloth", url_gambar: "" },
-    { id_hadiah: "GIFT-05", nama_hadiah: "Pulpen", stok: 50, warna_sektor: "#E4B842", icon_type: "pen", url_gambar: "" }
+prizes: [
+    { id_hadiah: "GIFT-01", nama_hadiah: "🥤 Tumbler Reebok", stok: 3, warna_sektor: "#9E1316", icon_type: "tumbler", url_gambar: "" },
+    { id_hadiah: "GIFT-02", nama_hadiah: "🔑 Gantungan Kunci", stok: 30, warna_sektor: "#E4B842", icon_type: "keychain", url_gambar: "" },
+    { id_hadiah: "GIFT-03", nama_hadiah: "🛍️ Pouch Serut", stok: 20, warna_sektor: "#141210", icon_type: "pouch", url_gambar: "" },
+    { id_hadiah: "GIFT-04", nama_hadiah: "🧽 Lap Jam Tangan", stok: 30, warna_sektor: "#9E1316", icon_type: "cloth", url_gambar: "" },
+    { id_hadiah: "GIFT-05", nama_hadiah: "🖊️ Pulpen", stok: 50, warna_sektor: "#E4B842", icon_type: "pen", url_gambar: "" }
   ],
-
+  
   customers: []
 };
 
